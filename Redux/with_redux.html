@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.1.1/redux.js"></script>
+  </head>
+
+  <body>
+    <style>
+      .container{
+        border: 5px solid black;
+        padding: 10px;
+      }
+    </style>
+
+    <div id="red"></div>
+    <div id="blue"></div>
+    <div id="green"></div>
+    <script>
+      function reducer(state, action){
+        // state 값이 정의되지 않은 초기 상태라면. 즉 초기상태라면
+        if (state === undefined){
+          return { color:"yellow" }
+        }
+        var newState
+        if (action.type==="CHANGE_COLOR") {
+          // state의 프로퍼티들이 복제되어 newState 변수에 들어감.
+          newState = Object.assign({}, state, {color:action.color})
+        }
+        return newState
+      }
+      // store가 store 라는 전역변수에 저장이됨. 즉 이러면 애플리케이션 어디서든 실행할 수 있는 코드가 됨.
+      // 위와 같이 state 초기값에 대해 설정해 주면 store에는 state의 초기값이 저장이 되는 것임.
+      var store = Redux.createStore(
+        reducer,
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+        );
+
+      // 확인하기 위해
+      console.log(store.getState());
+
+      function red() {
+        // state를 불러와서, ${} 문법으로 활용 가능하다.
+        var state = store.getState()
+        
+        // store.dispatch 사용시, 객체를 넘기고, 그 객체에는 type을 무조건 선언해야함.
+        document.querySelector('#red').innerHTML =  `
+          <div class="container" id="component_red" style="background-color=${state.color}">
+            <h1>red</h1>
+            
+            <input type="button" value="fire" onclick="
+              store.dispatch({type:'CHANGE_COLOR', color: 'red'});
+            ">
+          </div>
+        `;
+      }
+      // state가 바뀔때 마다
+      store.subscribe(red)
+      red();
+      
+      function blue() {
+        // state를 불러와서, ${} 문법으로 활용 가능하다.
+        var state = store.getState()
+        
+        // store.dispatch 사용시, 객체를 넘기고, 그 객체에는 type을 무조건 선언해야함.
+        document.querySelector('#blue').innerHTML =  `
+          <div class="container" id="component_blue" style="background-color=${state.color}">
+            <h1>blue</h1>
+            
+            <input type="button" value="fire" onclick="
+              store.dispatch({type:'CHANGE_COLOR', color: 'blue'});
+            ">
+          </div>
+        `;
+      }
+      store.subscribe(blue)
+      blue();
+
+      function green() {
+        // state를 불러와서, ${} 문법으로 활용 가능하다.
+        var state = store.getState()
+        
+        // store.dispatch 사용시, 객체를 넘기고, 그 객체에는 type을 무조건 선언해야함.
+        document.querySelector('#green').innerHTML =  `
+          <div class="container" id="component_green" style="background-color=${state.color}">
+            <h1>green</h1>
+            
+            <input type="button" value="fire" onclick="
+              store.dispatch({type:'CHANGE_COLOR', color: 'green'});
+            ">
+          </div>
+        `;
+      }
+      store.subscribe(green)
+      green();
+      
+    </script>
+  </body>
+</html>
